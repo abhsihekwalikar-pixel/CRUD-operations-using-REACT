@@ -1,4 +1,4 @@
-# UserHub: Full-Stack User Management System
+# User Management: Full-Stack User Management System
 
 A robust, production-ready User Management System designed for secure authentication, role-based administration, and seamless user data handling. Built with a modern React frontend and a high-performance FastAPI backend.
 
