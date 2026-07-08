@@ -6,7 +6,7 @@ import api from '../api'
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
 
-function LoginPage() {
+function LoginPage({ onLoginSuccess }) {
   const navigate = useNavigate()
   const [formData, setFormData] = useState({ email: '', password: '', remember: false })
   const [errors, setErrors] = useState({})
@@ -55,11 +55,15 @@ function LoginPage() {
         email: formData.email,
         password: formData.password,
       })
-      const { access_token, email, role, name, user_id } = response.data
-      localStorage.setItem('token', access_token)
-      localStorage.setItem('user', JSON.stringify({ id: user_id, email, role, name }))
+      if (typeof onLoginSuccess === 'function') {
+        onLoginSuccess(response.data)
+      } else {
+        const { access_token, email, role, name, user_id } = response.data
+        localStorage.setItem('token', access_token)
+        localStorage.setItem('user', JSON.stringify({ id: user_id, email, role, name }))
+        navigate('/dashboard')
+      }
       toast.success('✅ Logged in successfully!', { id: toastId })
-      navigate('/dashboard')
     } catch (err) {
       const message = err.response?.data?.detail || 'Login failed. Please check your credentials.'
       setErrors({ form: message })

@@ -8,6 +8,9 @@ import LandingPage from './pages/LandingPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import UserDashboardPage from './pages/UserDashboardPage'
+import UserSettingsPage from './pages/UserSettingsPage'
+import DashboardInsightsPage from './pages/DashboardInsightsPage'
+import AdminSupportPage from './pages/AdminSupportPage'
 import AdminDashboardPage from './pages/AdminDashboardPage'
 
 const routeAnimation = {
@@ -36,17 +39,21 @@ function App() {
 
   const handleLoginSuccess = (loginData) => {
     const tokenValue = loginData.access_token || loginData.token
+    const rawRole = (loginData.role || loginData.user?.role || 'user').toString().toLowerCase()
+    const normalizedRole = rawRole === 'admin' || rawRole === 'administrator' || rawRole === 'superadmin' || loginData.is_admin
+      ? 'admin'
+      : 'user'
     const userInfo = {
       id: loginData.user_id || loginData.user?.id,
       email: loginData.email || loginData.user?.email,
-      role: loginData.role || loginData.user?.role,
+      role: normalizedRole,
       name: loginData.name || loginData.user?.name,
     }
     localStorage.setItem('token', tokenValue)
     localStorage.setItem('user', JSON.stringify(userInfo))
     setToken(tokenValue)
     setUser(userInfo)
-    navigate('/dashboard')
+    navigate('/dashboard', { replace: true })
   }
 
   const handleLogout = () => {
@@ -98,6 +105,18 @@ function App() {
             element={user ? <PageTransition><UserDashboardPage /></PageTransition> : <Navigate to="/login" replace />}
           />
           <Route
+            path="/dashboard/user/settings"
+            element={user ? <PageTransition><UserSettingsPage /></PageTransition> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/dashboard/user/insights"
+            element={user ? <PageTransition><DashboardInsightsPage /></PageTransition> : <Navigate to="/login" replace />}
+          />
+          <Route
+            path="/dashboard/user/support"
+            element={user ? <PageTransition><AdminSupportPage /></PageTransition> : <Navigate to="/login" replace />}
+          />
+          <Route
             path="/dashboard/admin"
             element={user ? <PageTransition><AdminDashboardPage /></PageTransition> : <Navigate to="/login" replace />}
           />
@@ -112,10 +131,11 @@ function App() {
           style: {
             borderRadius: '24px',
             padding: '18px 22px',
-            color: '#fff',
+            color: '#111827',
+            background: '#f8fafc',
             fontWeight: 700,
             fontSize: '1rem',
-            boxShadow: '0 30px 80px rgba(15, 23, 42, 0.2)',
+            boxShadow: '0 30px 80px rgba(15, 23, 42, 0.12)',
           },
           success: {
             iconTheme: { primary: '#ffffff', secondary: '#22c55e' },

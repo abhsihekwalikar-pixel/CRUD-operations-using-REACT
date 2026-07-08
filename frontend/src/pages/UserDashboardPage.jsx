@@ -76,9 +76,9 @@ function UserDashboardPage() {
           </div>
         </div>
         <div className="feature-strip">
-          <span>Review account settings</span>
-          <span>Check dashboard insights</span>
-          <span>Reach out to admin support</span>
+          <a href="/dashboard/user/settings" className="feature-link">Review account settings</a>
+          <a href="/dashboard/user/insights" className="feature-link">Check dashboard insights</a>
+          <a href="/dashboard/user/support" className="feature-link">Reach out to admin support</a>
         </div>
       </section>
 
